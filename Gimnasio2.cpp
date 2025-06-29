@@ -63,6 +63,27 @@ Cliente* buscar(Cliente* raiz, int cedula){
 
 }
 
+
+
+
+public:
+
+    ABB() {
+        raiz = nullptr;
+    }
+
+    void insertarCliente(int cedula, const string& nombre, const string& membresia) {
+        raiz = insertar(raiz, cedula, nombre, membresia);
+    }
+
+    void buscarCliente(int cedula) {
+        Cliente* encontrado = buscar(raiz, cedula);
+        if (encontrado != nullptr) {
+            cout << "Cliente encontrado: " << encontrado->nombreCompleto << ", Membresía: " << encontrado->membresia << endl;
+        } else {
+            cout << "Cliente no encontrado." << endl;
+        }
+    }
 };
 
 
@@ -86,7 +107,7 @@ void menu() {
 
 int main() {
 
-
+    ABB arbol;
     int opcion, cedula;
     string nombre, membresia;
 
@@ -103,11 +124,13 @@ int main() {
                 getline(cin, nombre);
                 cout << "Ingrese el tipo de membresia [Mensual, Trimestral, Anual]: ";
                 getline(cin, membresia);
+                arbol.insertarCliente(cedula, nombre, membresia);
                 break;
 
             case 2:
                 cout << "Para buscar un cliente, ingrese la cédula: ";
                 cin >> cedula;
+                arbol.buscarCliente(cedula);
                 break;
 
             case 3:
