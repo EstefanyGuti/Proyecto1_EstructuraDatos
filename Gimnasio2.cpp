@@ -32,20 +32,21 @@ class ABB{
 private:
  Cliente*raiz;
 
-//Crear un nuevo cliente
-Cliente* insertar(Cliente* raiz, int cedula, const string& nombreCompleto, const string& membresia) {
-    if (raiz == nullptr) {
-        return new Cliente(cedula, nombreCompleto, membresia);
+    //Crear un nuevo cliente
+    bool insertar(Cliente*& raiz, int cedula, const string& nombreCompleto, const string& membresia) {
+        if (raiz == nullptr) {
+            raiz = new Cliente(cedula, nombreCompleto, membresia);
+            return true;  //Se insertó exitosamente
+        }
+
+        if (cedula < raiz->cedula) {
+            return insertar(raiz->izquierda, cedula, nombreCompleto, membresia);
+        } else if (cedula > raiz->cedula) {
+            return insertar(raiz->derecha, cedula, nombreCompleto, membresia);
+        } else {
+            return false; // La cédula ya existe
+        }
     }
-    if (cedula < raiz->cedula) {
-        raiz->izquierda = insertar(raiz->izquierda, cedula, nombreCompleto, membresia);
-    } else if (cedula > raiz->cedula) {
-        raiz->derecha = insertar(raiz->derecha, cedula, nombreCompleto, membresia);
-    } else {
-        cout << "La cedula ya existe.\n";
-    }
-    return raiz;
-}
 
 //Buscar un cliente por cédula - ID
 Cliente* buscar(Cliente* raiz, int cedula){
@@ -72,14 +73,18 @@ public:
         raiz = nullptr;
     }
 
-    void insertarCliente(int cedula, const string& nombre, const string& membresia) {
-        raiz = insertar(raiz, cedula, nombre, membresia);
+    void insertarCliente(int cedula, const string& nombreCompleto, const string& membresia) {
+    if (insertar(raiz, cedula, nombreCompleto, membresia)) {
+        cout << "===Cliente agregado correctamente: " << nombreCompleto << ", Cédula: " << cedula << "===" << endl;
+    } else {
+        cout << "Error: La cédula ya existe. No se registró el cliente." << endl;
     }
+}
 
     void buscarCliente(int cedula) {
         Cliente* encontrado = buscar(raiz, cedula);
         if (encontrado != nullptr) {
-            cout << "Cliente encontrado: " << encontrado->nombreCompleto << ", Membresía: " << encontrado->membresia << endl;
+            cout << "===Cliente encontrado: " << encontrado->nombreCompleto << ", Membresía: " << encontrado->membresia<< "===" << endl;
         } else {
             cout << "Cliente no encontrado." << endl;
         }
@@ -109,11 +114,12 @@ int main() {
 
     ABB arbol;
     int opcion, cedula;
-    string nombre, membresia;
+    string nombreCompleto, membresia;
 
     do {
         menu();
         cin >> opcion;
+        cin.ignore();
 
         switch (opcion) {
             case 1:
@@ -121,10 +127,10 @@ int main() {
                 cin >> cedula;
                 cin.ignore();
                 cout << "Ingrese nombre del cliente: ";
-                getline(cin, nombre);
+                getline(cin, nombreCompleto);
                 cout << "Ingrese el tipo de membresia [Mensual, Trimestral, Anual]: ";
                 getline(cin, membresia);
-                arbol.insertarCliente(cedula, nombre, membresia);
+                arbol.insertarCliente(cedula, nombreCompleto, membresia);
                 break;
 
             case 2:
