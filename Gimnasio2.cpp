@@ -25,7 +25,24 @@ struct Cliente {
     Cliente(int cedula, const string& nombreCompleto, const string& membresia): cedula(cedula), nombreCompleto(nombreCompleto), membresia(membresia), izquierda(nullptr), derecha(nullptr){}
 };
 
+string tmembresia() {
+    int opcion;
+    cout << "Seleccione el tipo de membresia:\n";
+    cout << "1. Mensual\n";
+    cout << "2. Trimestral\n";
+    cout << "3. Anual\n";
+    cout << "Ingrese una opcion: ";
+    cin >> opcion;
 
+    switch (opcion) {
+        case 1: return "Mensual";
+        case 2: return "Trimestral";
+        case 3: return "Anual";
+        default:
+            cout << "Opcion no valida, asignado 'Mensual' por defecto.\n";
+            return "Mensual";
+    }
+}
 
 class ABB{
 
@@ -63,9 +80,15 @@ Cliente* buscar(Cliente* raiz, int cedula){
 
 
 }
+// Mostrar cliente
+void mcliente(Cliente* raiz) {
+    if (raiz == nullptr) return;
 
-
-
+    mcliente(raiz->izquierda);
+    cout << "ID: " << raiz->cedula << ", Nombre: " << raiz->nombreCompleto
+         << ", Membresia: " << raiz->membresia << '\n';
+    mcliente(raiz->derecha);
+}
 
 public:
 
@@ -80,7 +103,9 @@ public:
         cout << "Error: La cédula ya existe. No se registró el cliente." << endl;
     }
 }
-
+    void mostrarClientes() {
+    mcliente(raiz);
+    }
     void buscarCliente(int cedula) {
         Cliente* encontrado = buscar(raiz, cedula);
         if (encontrado != nullptr) {
@@ -90,7 +115,6 @@ public:
         }
     }
 };
-
 
 // Ver cliente
 //Eliminar cliente
@@ -128,8 +152,7 @@ int main() {
                 cin.ignore();
                 cout << "Ingrese nombre del cliente: ";
                 getline(cin, nombreCompleto);
-                cout << "Ingrese el tipo de membresia [Mensual, Trimestral, Anual]: ";
-                getline(cin, membresia);
+                membresia = tmembresia();
                 arbol.insertarCliente(cedula, nombreCompleto, membresia);
                 break;
 
@@ -141,6 +164,7 @@ int main() {
 
             case 3:
                 cout << "Lista de clientes:\n";
+                arbol.mostrarClientes();
                 break;
 
             case 4:
