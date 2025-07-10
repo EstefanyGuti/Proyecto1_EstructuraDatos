@@ -114,6 +114,25 @@ public:
             cout << "Cliente no encontrado." << endl;
         }
     }
+    // Guardar en archivo
+void guardar(Cliente* raiz, ofstream &out) {
+    if (raiz == nullptr) return;
+
+    guardar(raiz->izquierda, out);
+    out << raiz->cedula << ";" << raiz->nombreCompleto << ";" << raiz->membresia << '\n';
+    guardar(raiz->derecha, out);
+}
+
+void gdatos() {
+    ofstream archivo("clientes.txt");
+    if (archivo.is_open()) {
+        guardar(raiz, archivo);
+        archivo.close();
+        cout << "Datos guardados en 'clientes.txt'.\n";
+    } else {
+        cout << "Error al abrir el archivo.\n";
+    }
+}
 };
 
 // Ver cliente
@@ -173,7 +192,8 @@ int main() {
                 break;
 
             case 5:
-
+                 arbol.gdatos();
+                cout << "Datos guardados en 'clientes.txt'.\n";
                 break;
 
             case 6:
