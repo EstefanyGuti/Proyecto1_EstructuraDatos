@@ -114,8 +114,27 @@ public:
             cout << "Cliente no encontrado." << endl;
         }
     }
-};
+void cargarDesdeArchivo(const string& nombreArchivo = "clientes.txt") {
+    ifstream archivo(nombreArchivo);
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir el archivo.\n";
+        return;
+    }
 
+    string linea;
+    while (getline(archivo, linea)) {
+        size_t pos1 = linea.find(';');
+        size_t pos2 = linea.find(';', pos1 + 1);
+
+        int id = stoi(linea.substr(0, pos1));
+        string nombre = linea.substr(pos1 + 1, pos2 - pos1 - 1);
+        string membresia = linea.substr(pos2 + 1);
+
+        insertar(raiz, id, nombre, membresia);  // ← llamar a insertar desde dentro de la clase
+    }
+   archivo.close();
+    cout << "Datos cargados desde archivo.\n";
+}
 // Ver cliente
 //Eliminar cliente
 //Guardar en archivo
@@ -173,12 +192,13 @@ int main() {
                 break;
 
             case 5:
-
+             arbol.gdatos();
+                cout << "Datos guardados en 'clientes.txt'.\n";
                 break;
 
             case 6:
-
-                break;
+             cout << "Cerrando....\n";
+             break;
 
             default:
                 cout << "Opción inválida.\n";
